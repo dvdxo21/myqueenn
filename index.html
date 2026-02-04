@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For My Princess</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --env-red: #b31924;
+    --paper: #fdfaf0;
+    --curtain-pink: #9c1d3d; /* Deeper velvet pink */
+    --gold: #d4af37;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+body {
+    margin: 0; height: 100vh;
+    font-family: 'Playfair Display', serif;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; 
+    /* BACKGROUND IMAGE SET UP */
+    background-image: url("/images/download.jpg");
+
+    background-color: #222;
+}
+
+/* ---------------- PHOTOS ---------------- */
+#photo-frame { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.polaroid {
+    position: absolute; width: clamp(90px, 18vw, 130px);
+    padding: 8px 8px 22px; background: white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 2;
+}
+.polaroid img { width: 100%; display: block; }
+
+/* ---------------- THEATER CURTAINS ---------------- */
+.curtain-container { position: fixed; inset: 0; z-index: 2000; display: flex; cursor: pointer; }
+.curtain-half {
+    width: 50%; height: 100%; background-color: var(--curtain-pink);
+    background-image: repeating-linear-gradient(to right, rgba(0,0,0,0.5) 0px, transparent 20px, rgba(255,255,255,0.1) 40px, rgba(0,0,0,0.4) 60px);
+    transition: transform 2.2s cubic-bezier(0.45,0.05,0.55,0.95);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8); position: relative;
+}
+/* Tie-back cords for that realistic look */
+.curtain-half::before {
+    content: ""; position: absolute; top: 50%; width: 30px; height: 100px;
+    background: gold; border-radius: 50%; opacity: 0; transition: 1s;
+}
+.curtain-half::after {
+    content: ""; position: absolute; bottom: 0; width: 100%; height: 35px;
+    background: repeating-linear-gradient(90deg, var(--gold), #8c6d12 4px); border-top: 3px solid #ffd700;
+}
+.left-curtain { border-right: 5px solid gold; transform-origin: left; }
+.right-curtain { border-left: 5px solid gold; transform-origin: right; }
+.opened .left-curtain { transform: translateX(-90%) scaleX(0.3) skewY(5deg); }
+.opened .right-curtain { transform: translateX(90%) scaleX(0.3) skewY(-5deg); }
+.opened { pointer-events: none; visibility: hidden; transition: visibility 0s 2.2s; }
+
+/* ---------------- STAGE ---------------- */
+#stage { z-index: 100; text-align: center; width: 100%; }
+.header-text { font-family: 'Great Vibes', cursive; color: white; font-size: clamp(3rem, 10vw, 4.5rem); margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+
+/* ---------------- ENVELOPE ---------------- */
+.envelope-wrapper {
+    position: relative; width: clamp(280px, 85vw, 400px); height: 230px;
+    background: #801118; margin: auto; cursor: pointer;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.7); perspective: 1000px;
+}
+.flap {
+    position: absolute; top: 0; width: 100%; height: 0;
+    border-left: clamp(140px,42.5vw,200px) solid transparent;
+    border-right: clamp(140px,42.5vw,200px) solid transparent;
+    border-top: 130px solid var(--env-red);
+    transform-origin: top; transition: transform 0.8s ease; z-index: 60;
+}
+.open .flap { transform: rotateX(180deg); z-index: 10; }
+.lilies {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%) scale(0.6);
+    width: 100%; opacity: 0; transition: all 0.9s 0.5s ease-out; z-index: 20;
+}
+.open .lilies { opacity: 1; top: -150px; transform: translateX(-50%) scale(1.2); }
+.pocket {
+    position: absolute; bottom: 0; width: 100%; height: 65%;
+    background: var(--env-red); z-index: 50;
+    clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ---------------- THE LETTER ---------------- */
+.letter {
+    position: absolute; bottom: 10%; left: 5%; width: 90%; height: 10%; 
+    background: var(--paper); padding: 25px; z-index: 30;
+    transition: all 0.8s ease 0.5s; opacity: 0; display: flex; flex-direction: column; align-items: center;
+}
+.open .letter {
+    opacity: 1; position: fixed; inset: 0; margin: auto;
+    width: 92vw; max-width: 450px; height: 580px;
+    z-index: 3000; border: 12px solid white;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+}
+
+.btn-group { margin-top: auto; padding-bottom: 20px; width: 100%; }
+.btn {
+    border: none; border-radius: 50px;
+    font-weight: bold; cursor: pointer; margin: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.yes { background: #2ecc71; color: white; padding: 15px 40px; font-size: 1.2rem; }
+.no { background: #e74c3c; color: white; padding: 10px 25px; font-size: 0.9rem; }
+
+/* ---------------- SUCCESS & PETALS ---------------- */
+#success-message {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    z-index: 6000; display: none; flex-direction: column;
+    align-items: center; justify-content: center; color: white;
+    text-align: center; padding: 20px; animation: fadeIn 1s forwards;
+}
+.petal {
+    position: fixed; background: #ff4d6d; border-radius: 150% 0 150% 0;
+    z-index: 7000; pointer-events: none; animation: fall linear forwards;
+}
+@keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+
+<body onload="initPhotos()">
+
+<div id="photo-frame"></div>
+
+<div class="curtain-container" id="curtains" onclick="openShow()">
+    <div class="curtain-half left-curtain"></div>
+    <div class="curtain-half right-curtain"></div>
+</div>
+
+
+    <!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="Best Part.mp3" type="audio/mpeg">
+</audio>
+
+<div id="stage">
+    <h1 class="header-text">Love Mail</h1>
+    <div class="envelope-wrapper" id="main-envelope" onclick="openEnvelope()">
+        <div class="flap"></div>
+        <img src=hott.png class="lilies">
+        <div class="letter">
+            <div style="font-family:'Great Vibes'; font-size:2.8rem; color:#b00; margin-bottom:10px;">To: My Queen Esther</div>
+            <p style="font-family:'Dancing Script'; font-size:1.5rem; color:#333; text-align:center;">
+                “Hey Sexxy, You are as beautiful as a Daniel ceaser song, Im sorry for acting stupid lately. Thank you for listening, for not judging, I LOVE YOU ESTHER.🥺❤️”
+            </p>
+            <div class="btn-group">
+                <h3 style="font-family:'Playfair Display'; margin-bottom:15px; color:#333;">Will you be my Valentine?</h3>
+                <button class="btn yes" id="yes-btn" onclick="handleYes(event)">YES</button><br>
+                <button class="btn no" id="no-btn" onclick="dodge(event)" ontouchstart="dodge(event)">No</button>
+            </div>
+        </div>
+        <div class="pocket"></div>
+    </div>
+</div>
+
+<div id="success-message">
+    <h1 style="font-family:'Great Vibes'; font-size: 5rem; color: #ff4d6d;">To my Valentine ❤️</h1>
+    <p style="font-size: 1.8rem; font-family: 'Dancing Script';">I Love you more than words can express thank you for being you.</p>
+</div>
+
+<audio id="piano" loop>
+    <source src="https://www.chosic.com/wp-content/uploads/2021/04/Rain-and-Flowers-chosic.com_.mp3">
+</audio>
+
+<script>
+let yesScale = 1;
+
+function openShow() {
+    document.getElementById('curtains').classList.add('opened');
+    try { document.getElementById('piano').play(); } catch(e){}
+}
+
+function openEnvelope() {
+    document.getElementById('main-envelope').classList.add('open');
+}
+
+function dodge(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Move the No button
+    const noBtn = document.getElementById("no-btn");
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+
+    // Make Yes button bigger
+    yesScale += 0.3;
+    const yesBtn = document.getElementById("yes-btn");
+    yesBtn.style.transform = `scale(${yesScale})`;
+}
+
+function handleYes(e) {
+    e.stopPropagation();
+    document.getElementById('success-message').style.display = 'flex';
+    startPetals();
+}
+
+function startPetals() {
+    for(let i=0; i<100; i++) {
+        setTimeout(() => {
+            const p = document.createElement('div');
+            p.className = 'petal';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.width = Math.random() * 15 + 10 + 'px';
+            p.style.height = p.style.width;
+            p.style.background = `rgb(${200 + Math.random()*55}, ${50 + Math.random()*50}, ${80 + Math.random()*50})`;
+            p.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 5000);
+        }, i * 60);
+    }
+}
+
+function initPhotos(){
+    const f=document.getElementById("photo-frame");
+    const a=[
+        {top:"8%",left:"5%",rot:-8},{top:"8%",right:"5%",rot:10},
+        {top:"45%",left:"3%",rot:-5},{top:"42%",right:"3%",rot:7},
+        {bottom:"8%",left:"10%",rot:15},{bottom:"12%",right:"10%",rot:-9}
+    ];
+    const images=["esther1.png","esther2.png","hottt.png","shebad.png","starr.png","damn.png"];
+    images.forEach((s,i)=>{
+        const d=document.createElement("div");
+        d.className="polaroid";
+        Object.assign(d.style,a[i]);
+        d.style.transform=`rotate(${a[i].rot}deg)`;
+        d.innerHTML=`<img src="${s}" style="width:100%">`;
+        f.appendChild(d);
+    });
+
+
+document.addEventListener("click", () => bgMusic.play(), { once: true });
+document.addEventListener("touchstart", () => bgMusic.play(), { once: true });
+
+}
+</script>
+</body>
+</html>
