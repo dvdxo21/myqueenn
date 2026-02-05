@@ -11,21 +11,23 @@
 :root {
     --env-red: #b31924;
     --paper: #fdfaf0;
-    --curtain-pink: #9c1d3d; /* Deeper velvet pink */
+    --curtain-pink: #9c1d3d; 
     --gold: #d4af37;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
 body {
-    margin: 0; height: 100vh;
+    margin: 0; 
+    height: 100vh;
     font-family: 'Playfair Display', serif;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     overflow: hidden; 
-    /* BACKGROUND IMAGE SET UP */
-   background-image: url('images/download.jpg');
-
-    background-color: #222;
+    /* This is the main screen background */
+    background-color: #1a1a1a;
+    background-image: radial-gradient(circle, #333 0%, #000 100%);
 }
 
 /* ---------------- PHOTOS ---------------- */
@@ -44,11 +46,6 @@ body {
     background-image: repeating-linear-gradient(to right, rgba(0,0,0,0.5) 0px, transparent 20px, rgba(255,255,255,0.1) 40px, rgba(0,0,0,0.4) 60px);
     transition: transform 2.2s cubic-bezier(0.45,0.05,0.55,0.95);
     box-shadow: inset 0 0 100px rgba(0,0,0,0.8); position: relative;
-}
-/* Tie-back cords for that realistic look */
-.curtain-half::before {
-    content: ""; position: absolute; top: 50%; width: 30px; height: 100px;
-    background: gold; border-radius: 50%; opacity: 0; transition: 1s;
 }
 .curtain-half::after {
     content: ""; position: absolute; bottom: 0; width: 100%; height: 35px;
@@ -89,17 +86,37 @@ body {
     clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%);
 }
 
-/* ---------------- THE LETTER ---------------- */
+/* ---------------- THE LETTER (MODIFIED FOR FLOWERS) ---------------- */
 .letter {
     position: absolute; bottom: 10%; left: 5%; width: 90%; height: 10%; 
-    background: var(--paper); padding: 25px; z-index: 30;
+    background: var(--paper); padding: 40px; z-index: 30;
     transition: all 0.8s ease 0.5s; opacity: 0; display: flex; flex-direction: column; align-items: center;
+    
+    /* Flower Border Logic */
+    background-image: url('images/download.jpg');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay; /* Blends flowers with the paper color */
+    border: 15px solid white;
+    outline: 2px solid var(--gold);
 }
+
 .open .letter {
     opacity: 1; position: fixed; inset: 0; margin: auto;
-    width: 92vw; max-width: 450px; height: 580px;
-    z-index: 3000; border: 12px solid white;
+    width: 92vw; max-width: 450px; height: 620px;
+    z-index: 3000;
     box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+}
+
+.letter-content {
+    background: rgba(255, 250, 240, 0.85); /* Semi-transparent paper so flowers show behind text */
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .btn-group { margin-top: auto; padding-bottom: 20px; width: 100%; }
@@ -136,8 +153,6 @@ body {
     <div class="curtain-half right-curtain"></div>
 </div>
 
-
-    <!-- BACKGROUND MUSIC -->
 <audio id="bgMusic" loop>
     <source src="Best Part.mp3" type="audio/mpeg">
 </audio>
@@ -146,16 +161,17 @@ body {
     <h1 class="header-text">Love Mail</h1>
     <div class="envelope-wrapper" id="main-envelope" onclick="openEnvelope()">
         <div class="flap"></div>
-        <img src=hott.png class="lilies">
-        <div class="letter">
-            <div style="font-family:'Great Vibes'; font-size:2.8rem; color:#b00; margin-bottom:10px;">To: My Queen Esther</div>
-            <p style="font-family:'Dancing Script'; font-size:1.5rem; color:#333; text-align:center;">
-                “Hey Sexxy, You are as beautiful as a Daniel ceaser song, Im sorry for acting stupid lately. Thank you for listening, for not judging, I LOVE YOU ESTHER.🥺❤️”
-            </p>
-            <div class="btn-group">
-                <h3 style="font-family:'Playfair Display'; margin-bottom:15px; color:#333;">Will you be my Valentine?</h3>
-                <button class="btn yes" id="yes-btn" onclick="handleYes(event)">YES</button><br>
-                <button class="btn no" id="no-btn" onclick="dodge(event)" ontouchstart="dodge(event)">No</button>
+        <img src="hott.png" class="lilies"> <div class="letter">
+            <div class="letter-content">
+                <div style="font-family:'Great Vibes'; font-size:2.8rem; color:#b00; margin-bottom:10px;">To: My Queen Esther</div>
+                <p style="font-family:'Dancing Script'; font-size:1.5rem; color:#333; text-align:center;">
+                    “Hey Sexxy, You are as beautiful as a Daniel Caesar song. I'm sorry for acting stupid lately. Thank you for listening, for not judging. I LOVE YOU ESTHER.🥺❤️”
+                </p>
+                <div class="btn-group">
+                    <h3 style="font-family:'Playfair Display'; margin-bottom:15px; color:#333;">Will you be my Valentine?</h3>
+                    <button class="btn yes" id="yes-btn" onclick="handleYes(event)">YES</button><br>
+                    <button class="btn no" id="no-btn" onclick="dodge(event)" ontouchstart="dodge(event)">No</button>
+                </div>
             </div>
         </div>
         <div class="pocket"></div>
@@ -164,7 +180,7 @@ body {
 
 <div id="success-message">
     <h1 style="font-family:'Great Vibes'; font-size: 5rem; color: #ff4d6d;">To my Valentine ❤️</h1>
-    <p style="font-size: 1.8rem; font-family: 'Dancing Script';">I Love you more than words can express thank you for being you.</p>
+    <p style="font-size: 1.8rem; font-family: 'Dancing Script';">I Love you more than words can express, thank you for being you.</p>
 </div>
 
 <audio id="piano" loop>
@@ -176,7 +192,10 @@ let yesScale = 1;
 
 function openShow() {
     document.getElementById('curtains').classList.add('opened');
-    try { document.getElementById('piano').play(); } catch(e){}
+    try { 
+        document.getElementById('piano').play(); 
+        document.getElementById('bgMusic').play();
+    } catch(e){}
 }
 
 function openEnvelope() {
@@ -186,17 +205,12 @@ function openEnvelope() {
 function dodge(e) {
     e.preventDefault();
     e.stopPropagation();
-    
-    // Move the No button
     const noBtn = document.getElementById("no-btn");
     noBtn.style.position = "fixed";
     noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
     noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
-
-    // Make Yes button bigger
     yesScale += 0.3;
-    const yesBtn = document.getElementById("yes-btn");
-    yesBtn.style.transform = `scale(${yesScale})`;
+    document.getElementById("yes-btn").style.transform = `scale(${yesScale})`;
 }
 
 function handleYes(e) {
@@ -228,6 +242,7 @@ function initPhotos(){
         {top:"45%",left:"3%",rot:-5},{top:"42%",right:"3%",rot:7},
         {bottom:"8%",left:"10%",rot:15},{bottom:"12%",right:"10%",rot:-9}
     ];
+    // Make sure these filenames match exactly on GitHub (Lowercase/Uppercase)
     const images=["esther1.png","esther2.png","hottt.png","shebad.png","starr.png","damn.png"];
     images.forEach((s,i)=>{
         const d=document.createElement("div");
@@ -237,13 +252,7 @@ function initPhotos(){
         d.innerHTML=`<img src="${s}" style="width:100%">`;
         f.appendChild(d);
     });
-
-
-document.addEventListener("click", () => bgMusic.play(), { once: true });
-document.addEventListener("touchstart", () => bgMusic.play(), { once: true });
-
 }
 </script>
 </body>
-
 </html>
